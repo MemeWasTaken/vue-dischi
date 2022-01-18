@@ -3,13 +3,14 @@
         <div class="cards-container pt-5">
             <div class="row">
 				<div class="col offset-10 pb-2">
-                    <select v-model="selectionGenre" name="genre" id="genre" class="select" @change="filteredRecords">
+                    <!-- <select v-model="selectionGenre" name="genre" id="genre" class="select" @change="filteredRecords">
                         <option value="all">All</option>
                         <option value="jazz">Jazz</option>
                         <option value="metal">Metal</option>
                         <option value="pop">Pop</option>
                         <option value="rock">Rock</option>
-                    </select>
+                    </select> -->
+                    <FilterGenre @filter="filteredRecords($event)" />
                 </div>
             </div>
                 <div class="row row-cols-5 mx-auto">
@@ -31,16 +32,18 @@
 <script>
 import axios from 'axios';
 import Card from './Card.vue'
+import FilterGenre from './FilterGenre.vue'
 
 export default {
     name: "Main",
     components: {
         Card,
+        FilterGenre,
     },
     data() {
     return {
       records: null,
-      selectionGenre: 'all',
+    //   selectionGenre: 'all',
       arrayFiltered: null,
     };
     },
@@ -59,11 +62,11 @@ export default {
                 console.log(error);
             });
         },
-        filteredRecords() {
+        filteredRecords (text) {
             this.arrayFiltered = this.records;
 
-            if(this.selectionGenre !== 'all') {
-                this.arrayFiltered = this.arrayFiltered.filter(record => record.genre.toLowerCase() === this.selectionGenre);
+            if(text !== 'all') {
+                this.arrayFiltered = this.arrayFiltered.filter(record => record.genre.toLowerCase() === text);
             } else {
                 return this.arrayFiltered;
             }
