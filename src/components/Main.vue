@@ -1,18 +1,12 @@
 <template>
     <main>
-        <div class="cards-container pt-5">
-            <div class="row">
-				<div class="col offset-10 pb-2">
-                    <!-- <select v-model="selectionGenre" name="genre" id="genre" class="select" @change="filteredRecords">
-                        <option value="all">All</option>
-                        <option value="jazz">Jazz</option>
-                        <option value="metal">Metal</option>
-                        <option value="pop">Pop</option>
-                        <option value="rock">Rock</option>
-                    </select> -->
-                    <FilterGenre @filter="filteredRecords($event)" />
+        <div class="cards-container pt-4">
+            <div v-if="arrayFiltered">
+                <div class="row">
+                    <div class="col offset-10 pb-2">
+                        <FilterGenre @filter="filteredRecords($event)" />
+                    </div>
                 </div>
-            </div>
                 <div class="row row-cols-5 mx-auto">
                     <Card
                         v-for="(card, index) in arrayFiltered"
@@ -24,7 +18,10 @@
                         :albumYear="card.year"
                     />
                 </div>
-
+            </div>
+            <div v-else>
+                <h1 class="text-white"> Loading... </h1>
+            </div>
         </div>
     </main>
 </template>
@@ -43,12 +40,13 @@ export default {
     data() {
     return {
       records: null,
-    //   selectionGenre: 'all',
       arrayFiltered: null,
     };
     },
     mounted() {
-        this.getCards();
+        setTimeout(() => {
+            this.getCards();
+        }, 4000);
     },
     methods: {
         getCards() {
