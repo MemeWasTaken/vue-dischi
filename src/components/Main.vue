@@ -1,9 +1,20 @@
 <template>
     <main>
         <div class="cards-container pt-5">
+            <div class="row">
+				<div class="col offset-10 pb-2">
+                    <select v-model="selectionGenre" name="genre" id="genre" class="select" @change="filteredRecords">
+                        <option value="all">All</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="metal">Metal</option>
+                        <option value="pop">Pop</option>
+                        <option value="rock">Rock</option>
+                    </select>
+                </div>
+            </div>
                 <div class="row row-cols-5 mx-auto">
                     <Card
-                        v-for="(card, index) in records"
+                        v-for="(card, index) in arrayFiltered"
                         :key="index"
                         :image="card.poster"
                         :imageAlt="card.title"
@@ -29,23 +40,36 @@ export default {
     data() {
     return {
       records: null,
+      selectionGenre: 'all',
+      arrayFiltered: null,
     };
-  },
-  mounted() {
-      this.getCards();
-  },
-  methods: {
-      getCards() {
-          axios
+    },
+    mounted() {
+        this.getCards();
+    },
+    methods: {
+        getCards() {
+        axios
             .get('https://flynn.boolean.careers/exercises/api/array/music')
             .then((result) => {
                 this.records = result.data.response;
+                this.arrayFiltered = result.data.response;
             })
             .catch((error) => {
                 console.log(error);
             });
-      },
-  },
+        },
+        filteredRecords() {
+            this.arrayFiltered = this.records;
+
+            if(this.selectionGenre !== 'all') {
+                this.arrayFiltered = this.arrayFiltered.filter(record => record.genre.toLowerCase() === this.selectionGenre);
+            } else {
+                return this.arrayFiltered;
+            }
+            return this.arrayFiltered;
+        },
+    },
 };
 
 </script>
